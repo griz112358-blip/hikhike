@@ -1,19 +1,11 @@
 import { useState } from 'react'
 import { View, Map } from '@tarojs/components'
 import Taro, { useLoad } from '@tarojs/taro'
+import { Feature, GeometryPoint, GeometryLineString } from '@myTypes/path.d'
+
 import './index.scss'
 import { wgs84togcj02 } from '../../utils/util'
-
-const MOCK_PATH = [
-  [31.229361,121.446564],
-  [31.227233,121.446967],
-  [31.22532,121.447551],
-  [31.224108,121.448037],
-  [31.223252,121.448371],
-  [31.222051,121.449121],
-  [31.22097,121.450122],
-  [31.219888,121.450733]
-]
+import * as pathData from '../../assets/path1.json'
 
 export default function Index() {
   const [latitude, setLatitude] = useState(39.90960456049752)
@@ -28,12 +20,15 @@ export default function Index() {
         const { lat, lon } = wgs84togcj02(res.latitude, res.longitude);
         setLatitude(lat)
         setLongitude(lon)
-        const startPoint = MOCK_PATH[0]
-        const endPoint = MOCK_PATH[MOCK_PATH.length - 1]
+        const startFeature = pathData.features.find(f => f.id === 'startPoint') as Feature;
+        const endFeature = pathData.features.find(f => f.id === 'endPoint') as Feature;
+        const startPoint = (startFeature.geometry as GeometryPoint).coordinates;
+        const endPoint = (endFeature.geometry as GeometryPoint).coordinates;
+
         setMarkers([
           { id: 1, latitude: lat, longitude: lon, callout: { content: '我在这里1', display: 'ALWAYS' } },
-          { id: 2, latitude: startPoint[0], longitude: startPoint[1], callout: { content: '起点', display: 'ALWAYS' }, iconPath: 'https://cdn-icons-png.flaticon.com/128/447/447031.png', width: 20, height: 20 }, // 起点标记
-          { id: 3, latitude: endPoint[0], longitude: endPoint[1], callout: { content: '终点', display: 'ALWAYS' }, iconPath: 'https://cdn-icons-png.flaticon.com/128/5359/5359315.png', width: 20, height: 20 } // 终点标记
+          { id: 2, latitude: startPoint[1], longitude: startPoint[0], callout: { content: '起点', display: 'ALWAYS' }, iconPath: 'https://cdn-icons-png.flaticon.com/128/447/447031.png', width: 20, height: 20 }, // 起点标记
+          { id: 3, latitude: endPoint[1], longitude: endPoint[0], callout: { content: '终点', display: 'ALWAYS' }, iconPath: 'https://cdn-icons-png.flaticon.com/128/5359/5359315.png', width: 20, height: 20 } // 终点标记
         ])
       },
       fail: function (err) {
@@ -45,10 +40,12 @@ export default function Index() {
         })
       }
     })
+    const lineStringFeature = pathData.features.find(f => f.geometry.type === 'LineString') as Feature;
+    const lineCoordinates = (lineStringFeature.geometry as GeometryLineString).coordinates;
 
     setPolyline([
       {
-        points: MOCK_PATH.map(item => ({ latitude: item[0], longitude: item[1] })),
+        points: lineCoordinates.map(item => ({ latitude: item[1], longitude: item[0] })),
         color: '#FF0000DD',
         width: 4
       }
