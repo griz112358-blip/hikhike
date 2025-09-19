@@ -1,8 +1,8 @@
 {
   "libVersion": "3.10.1",
-  "projectname": "hh",
+  "projectname": "wmp-to",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "coverView": false,
     "lazyloadPlaceholderEnable": false,
     "skylineRenderEnable": false,
