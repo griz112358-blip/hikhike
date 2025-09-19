@@ -4,14 +4,15 @@ import Taro, { useLoad } from '@tarojs/taro'
 import { Feature, GeometryPoint, GeometryLineString } from '@myTypes/path.d'
 
 import './index.scss'
-import { wgs84togcj02 } from '../../utils/util'
-import * as pathData from '../../assets/path1.json'
+import { wgs84togcj02, getDistance } from '../../utils/util'
+import pathData from '../../assets/path1.json'
 
 export default function Index() {
   const [latitude, setLatitude] = useState(39.90960456049752)
   const [longitude, setLongitude] = useState(116.3972282409668)
   const [markers, setMarkers] = useState<any[]>([])
   const [polyline, setPolyline] = useState<any[]>([])
+  const [totalDistance, setTotalDistance] = useState(0)
 
   useLoad(() => {
     Taro.getLocation({
@@ -50,6 +51,13 @@ export default function Index() {
         width: 4
       }
     ])
+    let calculatedDistance = 0;
+    for (let i = 0; i < lineCoordinates.length - 1; i++) {
+      const p1 = lineCoordinates[i];
+      const p2 = lineCoordinates[i + 1];
+      calculatedDistance += getDistance(p1[1], p1[0], p2[1], p2[0]);
+    }
+    setTotalDistance(parseFloat(calculatedDistance.toFixed(2))); // 保留两位小数
   })
 
   return (
@@ -63,6 +71,9 @@ export default function Index() {
         showLocation
         polyline={polyline}
       />
+      <View className='distance-display'>
+        总距离: {totalDistance} 米
+      </View>
     </View>
   )
 }
