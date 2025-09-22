@@ -1,14 +1,14 @@
 {
-  "miniprogramRoot": "dist/",
-  "projectname": "wmp-to",
+  "miniprogramRoot": "",
+  "projectname": "渣克记事本",
   "description": "",
-  "appid": "wx056fe7dde04e0f8f",
+  "appid": "wx544103e63628f8f5",
   "setting": {
-    "urlCheck": true,
-    "es6": false,
-    "enhance": false,
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
     "compileHotReLoad": false,
-    "postcss": false,
+    "postcss": true,
     "minified": false,
     "compileWorklet": false,
     "uglifyFileName": false,
@@ -38,6 +38,10 @@
     "ignore": [],
     "include": []
   },
-  "editorSetting": {},
-  "libVersion": "3.10.1"
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "libVersion": "3.10.1",
+  "condition": {}
 }

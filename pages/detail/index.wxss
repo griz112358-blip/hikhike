@@ -1,3 +1,4 @@
+/* pages/detail/index.wxss */
 .index {
   display: flex;
   flex-direction: column;
@@ -23,3 +24,5 @@
   font-size: 14px;
   z-index: 1000;
 }
+
+

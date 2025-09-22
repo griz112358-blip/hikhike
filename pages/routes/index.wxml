@@ -1,0 +1,10 @@
+<view class="routes">
+  <block wx:for="{{routes}}" wx:key="id">
+    <view class="route-item" data-id="{{item.id}}" bindtap="onRouteTap">
+      <view class="title">{{item.name}}</view>
+      <view class="desc">{{item.desc}}</view>
+    </view>
+  </block>
+</view>
+
+

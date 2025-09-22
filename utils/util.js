@@ -2,7 +2,7 @@ const PI = 3.14159265358979324;
 const a = 6378245.0;
 const ee = 0.006693421622965943;
 
-function outOfChina(lat: number, lon: number): boolean {
+function outOfChina(lat, lon) {
   if (lon < 72.004 || lon > 137.8347) {
     return true;
   }
@@ -12,7 +12,7 @@ function outOfChina(lat: number, lon: number): boolean {
   return false;
 }
 
-function transformLat(x: number, y: number): number {
+function transformLat(x, y) {
   let ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
   ret += (20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0 / 3.0;
   ret += (20.0 * Math.sin(y * PI) + 40.0 * Math.sin(y / 3.0 * PI)) * 2.0 / 3.0;
@@ -20,7 +20,7 @@ function transformLat(x: number, y: number): number {
   return ret;
 }
 
-function transformLon(x: number, y: number): number {
+function transformLon(x, y) {
   let ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
   ret += (20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0 / 3.0;
   ret += (20.0 * Math.sin(x * PI) + 40.0 * Math.sin(x / 3.0 * PI)) * 2.0 / 3.0;
@@ -28,7 +28,7 @@ function transformLon(x: number, y: number): number {
   return ret;
 }
 
-export function wgs84togcj02(wgLat: number, wgLon: number): { lat: number, lon: number } {
+function wgs84togcj02(wgLat, wgLon) {
   if (outOfChina(wgLat, wgLon)) {
     return { lat: wgLat, lon: wgLon };
   }
@@ -45,7 +45,7 @@ export function wgs84togcj02(wgLat: number, wgLon: number): { lat: number, lon: 
   return { lat: mgLat, lon: mgLon };
 }
 
-export function getDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+function getDistance(lat1, lon1, lat2, lon2) {
   const R = 6371e3; // metres
   const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
   const φ2 = lat2 * Math.PI / 180;
@@ -60,3 +60,9 @@ export function getDistance(lat1: number, lon1: number, lat2: number, lon2: numb
   const d = R * c; // in metres
   return d;
 }
+
+module.exports = {
+  wgs84togcj02,
+  getDistance
+}
+

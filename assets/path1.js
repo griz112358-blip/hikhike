@@ -1,4 +1,5 @@
-{
+// assets/path1.js
+module.exports = {
     "type": "FeatureCollection",
     "features": [
         {
@@ -301,3 +302,4 @@
         }
     ]
 }
+
