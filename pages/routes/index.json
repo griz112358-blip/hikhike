@@ -1,5 +1,6 @@
 {
-  "navigationBarTitleText": "线路列表"
+  "navigationBarTitleText": "线路列表",
+  "enablePullDownRefresh": true
 }
 
 

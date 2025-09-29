@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/routes/index",
-    "pages/detail/index"
+    "pages/detail/index",
+    "pages/follow/index"
   ],
   "requiredPrivateInfos": [
     "getLocation"

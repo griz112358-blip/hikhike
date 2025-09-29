@@ -1,15 +1,79 @@
-<view class="index">
-  <map
-    class="map-container"
-    longitude="{{longitude}}"
-    latitude="{{latitude}}"
-    markers="{{markers}}"
-    scale="{{scale}}"
-    show-location
-    polyline="{{polyline}}"
-  />
-  <view class="distance-display">
-    总距离: {{totalDistance}} 米
+<view class="detail-page">
+  <image class="hero" mode="aspectFill" src="{{coverImg}}" />
+  <view class="sheet">
+    <view class="header">
+      <view class="title">{{title}}</view>
+      <view class="subtitle">{{subtitle}}</view>
+    </view>
+    <view class="metrics">
+      <view class="metric">
+        <view class="metric-value">{{totalLengthKm}}</view>
+        <view class="metric-unit">公里</view>
+        <view class="metric-label">路线全长</view>
+      </view>
+      <view class="metric">
+        <view class="metric-value">{{maxAltitudeM}}</view>
+        <view class="metric-unit">米</view>
+        <view class="metric-label">最高海拔</view>
+      </view>
+      <view class="metric">
+        <view class="metric-value">{{cumulativeAscentM}}</view>
+        <view class="metric-unit">米</view>
+        <view class="metric-label">累计爬升</view>
+      </view>
+      <view class="metric">
+        <view class="metric-value">{{estimatedHours}}</view>
+        <view class="metric-unit">小时</view>
+        <view class="metric-label">参考耗时</view>
+      </view>
+    </view>
+
+    <view class="card map-card">
+      <map
+        id="detailMap"
+        class="map"
+        longitude="{{longitude}}"
+        latitude="{{latitude}}"
+        markers="{{markers}}"
+        scale="{{scale}}"
+        show-location
+        polyline="{{polyline}}"
+        enable-satellite="{{useSatellite}}"
+        enable-zoom="{{false}}"
+        enable-scroll="{{false}}"
+        enable-rotate="{{false}}"
+        enable-overlooking="{{false}}"
+      />
+      <view class="map-actions">
+        <view class="pill" bindtap="onToggleSatelliteBtn">{{useSatellite ? '普通图' : '卫星图'}}</view>
+      </view>
+    </view>
+
+    <view class="list">
+      <view class="row">
+        <view class="row-label">难度</view>
+        <view class="row-extra">{{difficultyTag}}</view>
+        <view class="row-value">{{difficultyText}}</view>
+      </view>
+      <view class="row">
+        <view class="row-label">风险</view>
+        <view class="row-extra warn">{{riskTag}}</view>
+        <view class="row-value">{{riskText}}</view>
+      </view>
+      <view class="row">
+        <view class="row-label">适宜月份</view>
+        <view class="row-value">{{seasonText}}</view>
+      </view>
+      <view class="row">
+        <view class="row-label">时长</view>
+        <view class="row-value">{{durationText}}</view>
+      </view>
+    </view>
+
+    <view class="btns">
+      <button class="btn ghost" bindtap="onOpenOtherMap">使用其他地图导航</button>
+      <button class="btn primary" bindtap="onToggleFollowTrack">{{followTrack ? '取消跟随' : '跟随路线'}}</button>
+    </view>
   </view>
 </view>
 

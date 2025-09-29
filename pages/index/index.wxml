@@ -1,6 +1,6 @@
 <!--pages/index/index.wxml-->
 <view class="home">
-  <image class="poster" mode="aspectFill" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200" />
+  <image class="poster" mode="aspectFill" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png" />
   <view class="start-btn" bindtap="onStart">
     开始探索
   </view>

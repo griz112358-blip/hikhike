@@ -1,0 +1,33 @@
+<view class="follow-page">
+  <map
+    id="followMap"
+    class="map"
+    longitude="{{longitude}}"
+    latitude="{{latitude}}"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    show-location
+    enable-satellite="{{useSatellite}}"
+  />
+  <view class="hud top-left">
+    <view class="panel">
+      <view class="col">
+        <view class="big">{{temperature}}°C</view>
+        <view class="label">{{city}}</view>
+      </view>
+      <view class="grid">
+        <view class="cell"><text class="v">{{windSpeed}}</text><text class="u">m/s</text><text class="k">风速</text></view>
+        <view class="cell"><text class="v">{{humidity}}</text><text class="u">%</text><text class="k">湿度</text></view>
+        <view class="cell"><text class="v">{{rain}}</text><text class="u">mm</text><text class="k">降水</text></view>
+        <view class="cell"><text class="v">{{uvIndex}}</text><text class="k">紫外线指数</text></view>
+      </view>
+    </view>
+  </view>
+  <view class="bottom-bar">
+    <view class="start-btn" bindtap="onStartRecord">
+      <text>开始记录</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+</view>
+
