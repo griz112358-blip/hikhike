@@ -1,7 +1,95 @@
 <!--pages/index/index.wxml-->
-<view class="home">
-  <image class="poster" mode="aspectFill" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png" />
-  <view class="start-btn" bindtap="onStart">
-    开始探索
+<view class="container">
+  <!-- Logo -->
+  <view class="logo">
+    <image src="/assets/images/logo.svg"></image>
   </view>
+
+  <!-- Search Bar -->
+  <view class="search-bar">
+    <image class="search-icon" src="/assets/images/icons/search.svg"></image>
+    <input class="search-input" placeholder="搜索路线" />
+  </view>
+
+  <!-- Weekly Hot Recommendations -->
+  <view class="section-title">
+    <text>热门Top3</text>
+    <text class="fire-icon">🔥🔥</text>
+  </view>
+  <scroll-view class="hot-routes" scroll-x enable-flex="true">
+    <view class="route-card" data-id="68d23ef290ed2201c4ea1793" bindtap="onRouteTap">
+      <image class="route-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/dXCMPNaho5GnpWfutlWWIQWU8dv2CRqu/%E8%99%8E%E8%B7%B3%E5%B3%A1.png"></image>
+      <view class="route-info">
+        <text class="route-title">虎跳峡</text>
+        <text class="route-description">全球十大經典徒步路線</text>
+      </view>
+    </view>
+    <view class="route-card" data-id="68d8064ed9e1c5394e8069b1" bindtap="onRouteTap">
+      <image class="route-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/K53vxkNkmdadDlteuBk59NjvXTceaGg8/%E7%86%8A%E9%87%8E%E5%8F%A4%E9%81%93.png"></image>
+      <view class="route-info">
+        <text class="route-title">熊野古道</text>
+        <text class="route-description">日本最受推崇的朝聖路線</text>
+      </view>
+    </view>
+    <view class="route-card" data-id="68d2421feb5f221d6f7c8c9a" bindtap="onRouteTap">
+      <image class="route-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/8xf0RJlm0Ynmpt5QWEXmVjx7041iBoeB/%E9%BA%A6%E7%90%86%E6%B5%A9%E5%BE%84.png"></image>
+      <view class="route-info">
+        <text class="route-title">麦理浩径二段</text>
+        <text class="route-description">攀登高山、親近海灣，享受動感節奏</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Popular Searches -->
+  <view class="section-title">
+    <text>大家都在搜</text>
+  </view>
+  <view class="popular-searches">
+    <text class="search-tag">林间穿越</text>
+    <text class="search-tag">瀑布景观</text>
+    <text class="search-tag">狗狗友好🐶</text>
+    <text class="search-tag">滨海路线🌊</text>
+    <text class="search-tag">溯溪目的地</text>
+    <text class="search-tag">公园步道⛰️</text>
+  </view>
+
+  <!-- Hot Destinations -->
+  <view class="section-title">
+    <text>江浙沪热门</text>
+  </view>
+  <scroll-view class="hot-destinations" scroll-x enable-flex="true">
+    <view class="destination-card" data-id="68da5565096517792fb6f346" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/UEdeRimAsrW5rzxgQ1FyKuti3gMIuPyl/%E5%85%89%E7%A6%8F%E5%B0%8F%E4%B8%83%E5%B0%96.png"></image>
+      <text class="destination-name">苏州 光福小七尖</text>
+    </view>
+    <view class="destination-card" data-id="68da5488eb5f221d6f945768" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/z6a3Fd4GxBFKFMOPeMJoS8rcLUw50NH7/%E8%8A%B1%E5%B1%B1%E9%B1%BC%E9%AA%A8%E7%BA%BF.png"></image>
+      <text class="destination-name">苏州 花山鱼骨线</text>
+    </view>
+    <view class="destination-card" data-id="68da4d23d9e1c5394e86e0bd" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/H4P1iFhSRkOa9pzX1a8HP8RAXYHnT78p/%E7%A9%B9%E7%AA%BF%E5%B1%B1%E7%88%B1%E5%BF%83%E7%BA%BF.png"></image>
+      <text class="destination-name">苏州 穹窿山爱心线</text>
+    </view>
+    <view class="destination-card" data-id="68da415deb5f221d6f940b07" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/hFct8SlvfmMCyqylEGtvLXHRSN3kAX2X/%E6%97%BA%E5%B1%B1%E5%B0%8F%E7%8E%AF%E7%BA%BF.png"></image>
+      <text class="destination-name">苏州 旺山小环线</text>
+    </view>
+    <view class="destination-card" data-id="68da3c9103c88b65d774b42e" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/wrUP0MLwbJOq0bCdRErMieKm0GfTPggi/%E7%81%B5%E7%99%BD%E7%BA%BF.png"></image>
+      <text class="destination-name">苏州 灵白线</text>
+    </view>
+    <view class="destination-card" data-id="68d900a1d9e1c5394e8312b0" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/lWdvahWM1ors22SVIUvmfXIJtWuWNdlf/%E8%99%9E%E5%B1%B1.png"></image>
+      <text class="destination-name">苏州 虞山小环线</text>
+    </view>
+    <view class="destination-card" data-id="68da3b9603c88b65d774b000" bindtap="onRouteTap">
+      <image class="destination-image" src="http://lc-DNB4W2Wu.cn-n1.lcfile.com/U9fxnhPgMCr5n71I16WLd9pvMs7qexSn/%E4%B9%9D%E6%BA%AA%E5%8D%81%E5%85%AB%E6%B6%A7.png"></image>
+      <text class="destination-name">杭州 九溪十八涧</text>
+    </view>
+    <view class="destination-card" data-id="68d9012de338d34df4710f95" bindtap="onRouteTap">
+      <image class="destination-image" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/BCxcdhzxrRkpKPspc2opckCdptSwghvW/%E6%B8%94%E9%98%B3%E5%B1%B1.png"></image>
+      <text class="destination-name">苏州 渔洋山蝙蝠线</text>
+    </view>
+  </scroll-view>
+
 </view>

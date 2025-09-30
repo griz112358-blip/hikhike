@@ -1,31 +1,150 @@
 /* pages/index/index.wxss */
-.home {
+.container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  background: #000;
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  padding: 20px; /* 为上下左右都添加 20px 内边距 */
 }
 
-.poster {
-  flex: 1;
-  width: 100%;
-  height: 100%;
+.logo {
+  padding: 100px 0 40px;
 }
 
-.start-btn {
-  position: absolute;
-  bottom: 40px;
-  left: 20px;
-  right: 20px;
-  height: 48px;
-  background: #f5eee2;
-  color: black;
-  border-radius: 24px;
+.logo image {
+  display: block;
+  width: 137px;
+  height: 24px;
+  margin:  0 auto;
+}
+
+.search-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  background-color: #fff;
+  margin: 0; /* 移除水平方向的 margin，由容器的 padding 统一控制 */
+  padding: 8px 15px;
+  border-radius: 25px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 15px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 25px 0 15px 0; /* 移除水平方向的 margin，由容器的 padding 统一控制 */
+}
+
+.fire-icon {
+  margin-left: 5px;
+}
+
+.hot-routes {
+  white-space: nowrap;
+  padding: 0; /* 移除水平方向的 padding，由容器的 padding 统一控制 */
+}
+
+.route-card {
+  width: 200px; /* Adjust as needed */
+  height: 200px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: inline-block; /* For horizontal scroll */
+}
+
+.route-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.route-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  padding: 10px;
+  color: #fff;
+}
+
+.route-title {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: bold;
+  display: block;
+}
+
+.route-description {
+  font-size: 12px;
+  opacity: 0.8;
+  display: block;
+  margin-top: 5px;
+}
+
+.popular-searches {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0; /* 移除水平方向的 margin，由容器的 padding 统一控制 */
+}
+
+.search-tag {
+  background-color: #fff;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #555;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.hot-destinations {
+  white-space: nowrap;
+  padding: 0; /* 移除水平方向的 padding，由容器的 padding 统一控制 */
+  margin-bottom: 20px;
+}
+
+.destination-card {
+  width: 150px; /* Adjust as needed */
+  height: 100px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: inline-block;
+}
+
+.destination-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.destination-name {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
 }
 

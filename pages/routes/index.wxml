@@ -10,7 +10,7 @@
   </block>
   <block wx:else>
     <block wx:for="{{routes}}" wx:key="id">
-      <view class="route-item" data-id="{{item.id}}" data-route-key="{{item.routeKey}}" bindtap="onRouteTap">
+      <view class="route-item" data-id="{{item.id}}" bindtap="onRouteTap">
         <view class="row">
           <view class="title">{{item.name}}</view>
           <text class="chevron">›</text>

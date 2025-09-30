@@ -3,19 +3,22 @@
   "libVersion": "3.10.1",
   "projectname": "%E6%B8%A3%E5%85%8B%E8%AE%B0%E4%BA%8B%E6%9C%AC",
   "setting": {
-    "compileHotReLoad": true
+    "compileHotReLoad": true,
+    "urlCheck": false,
+    "coverView": false,
+    "lazyloadPlaceholderEnable": false,
+    "skylineRenderEnable": false,
+    "preloadBackgroundData": false,
+    "autoAudits": false,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "showShadowRootInWxmlPanel": false,
+    "useStaticServer": false,
+    "useLanDebug": false,
+    "showES6CompileOption": false,
+    "checkInvalidKey": true,
+    "ignoreDevUnusedFiles": true,
+    "bigPackageSizeSupport": false
   },
-  "condition": {
-    "miniprogram": {
-      "list": [
-        {
-          "name": "pages/follow/index",
-          "pathName": "pages/follow/index",
-          "query": "id=68d2420de338d34df45b7f53",
-          "launchMode": "default",
-          "scene": null
-        }
-      ]
-    }
-  }
+  "condition": {}
 }

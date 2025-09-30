@@ -5,6 +5,26 @@
     "pages/detail/index",
     "pages/follow/index"
   ],
+  "tabBar": {
+    "color": "#bfbfbf",
+    "selectedColor": "#1a3c1f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "探索",
+        "iconPath": "assets/images/icons/earth.png",
+        "selectedIconPath": "assets/images/icons/earth-s.png"
+      },
+      {
+        "pagePath": "pages/routes/index",
+        "text": "全部线路",
+        "iconPath": "assets/images/icons/map.png",
+        "selectedIconPath": "assets/images/icons/map-s.png"
+      }
+    ]
+  },
   "requiredPrivateInfos": [
     "getLocation"
   ],
