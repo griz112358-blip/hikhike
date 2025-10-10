@@ -2,13 +2,14 @@
 <view class="container">
   <!-- Logo -->
   <view class="logo">
-    <image src="/assets/images/logo.svg"></image>
+    <image class="mascot" mode="widthFix" src="https://lc-DNB4W2Wu.cn-n1.lcfile.com/dlldzcTO6ehmKkyQnL0iF0WN2stMwxc8/logo.png"></image>
+    <image class="text" src="/assets/images/logo.svg"></image>
   </view>
 
   <!-- Search Bar -->
   <view class="search-bar">
-    <image class="search-icon" src="/assets/images/icons/search.svg"></image>
-    <input class="search-input" placeholder="搜索路线" />
+    <input class="search-input" placeholder="搜索路线" value="{{searchText}}" bindinput="onSearchInput" />
+    <image class="search-icon" src="/assets/images/icons/search.svg" bindtap="onSearchTap"></image>
   </view>
 
   <!-- Weekly Hot Recommendations -->

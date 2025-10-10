@@ -8,10 +8,16 @@
 }
 
 .logo {
-  padding: 100px 0 40px;
+  padding: 50px 0 40px;
 }
 
-.logo image {
+.logo .mascot {
+  display: block;
+  width: 158px;
+  margin:  0 auto;
+}
+
+.logo .text {
   display: block;
   width: 137px;
   height: 24px;
@@ -22,21 +28,22 @@
   display: flex;
   align-items: center;
   background-color: #fff;
-  margin: 0; /* 移除水平方向的 margin，由容器的 padding 统一控制 */
+  margin: 0;
   padding: 8px 15px;
   border-radius: 25px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.search-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
 .search-input {
   flex: 1;
   font-size: 15px;
+  margin-right: 10px; /* 添加右侧间距 */
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  /* 移除 margin-right */
 }
 
 .section-title {

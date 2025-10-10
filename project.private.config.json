@@ -20,5 +20,17 @@
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
   },
-  "condition": {}
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/search_results/index",
+          "pathName": "pages/search_results/index",
+          "query": "keyword=虎",
+          "scene": null,
+          "launchMode": "default"
+        }
+      ]
+    }
+  }
 }

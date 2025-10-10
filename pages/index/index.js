@@ -1,6 +1,7 @@
 // pages/index/index.js
 Page({
   data: {
+    searchText: '',
     hotRoutes: [
       {
         id: 1,
@@ -42,6 +43,18 @@ Page({
     ]
   },
   onLoad() {},
+  onSearchInput(e) {
+    this.setData({
+      searchText: e.detail.value
+    });
+  },
+  onSearchTap() {
+    if (this.data.searchText) {
+      wx.navigateTo({
+        url: '/pages/search_results/index?keyword=' + this.data.searchText
+      });
+    }
+  },
   onStart() {
     wx.navigateTo({ url: '/pages/routes/index' })
   },
