@@ -4,7 +4,8 @@
     "pages/routes/index",
     "pages/detail/index",
     "pages/follow/index",
-    "pages/search_results/index"
+    "pages/search_results/index",
+    "pages/collection/index"
   ],
   "tabBar": {
     "color": "#bfbfbf",

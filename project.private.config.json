@@ -24,11 +24,18 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/collection/index",
+          "pathName": "pages/collection/index",
+          "query": "id=68ea1ca42f7ee809fcdbf50d",
+          "scene": null,
+          "launchMode": "default"
+        },
+        {
           "name": "pages/search_results/index",
           "pathName": "pages/search_results/index",
           "query": "keyword=虎",
-          "scene": null,
-          "launchMode": "default"
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }

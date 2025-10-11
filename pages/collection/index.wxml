@@ -1,0 +1,65 @@
+<view class="collection-page">
+  <block wx:if="{{loading}}">
+    <view class="loading">加载中...</view>
+  </block>
+  
+  <block wx:elif="{{error}}">
+    <view class="error-container">
+      <view class="error-message">{{error}}</view>
+      <button class="retry-btn" bindtap="onRetry">重试</button>
+    </view>
+  </block>
+  
+  <block wx:elif="{{collection}}">
+    <!-- 收藏信息头部 -->
+    <view class="collection-header">
+      <view class="cover-container" wx:if="{{collection.coverImg}}">
+        <image class="cover-img" src="{{collection.coverImg}}" mode="aspectFill"></image>
+        <view class="cover-overlay">
+          <view class="collection-name">{{collection.name}}</view>
+          <view class="route-count">包含 {{routes.length}} 条路线</view>
+        </view>
+      </view>
+      <view class="collection-info-fallback" wx:else>
+        <view class="collection-name">{{collection.name}}</view>
+        <view class="route-count">包含 {{routes.length}} 条路线</view>
+      </view>
+    </view>
+
+    <!-- 路线列表 -->
+    <view class="routes-section">
+      <view class="section-title">路线列表</view>
+      <block wx:if="{{routes.length === 0}}">
+        <view class="empty-routes">暂无路线数据</view>
+      </block>
+      <block wx:else>
+        <view class="routes">
+          <block wx:for="{{routes}}" wx:key="objectId">
+            <view class="route-item" data-id="{{item.objectId}}" bindtap="onRouteTap">
+              <view class="row">
+                <view class="title">{{item.routeName}}</view>
+                <text class="chevron">›</text>
+              </view>
+              <view class="meta">
+                <view class="meta-item">
+                  <text class="meta-label">里程</text>
+                  <text class="meta-value">{{item.totalLengthKm}}km</text>
+                </view>
+                <view class="divider"></view>
+                <view class="meta-item">
+                  <text class="meta-label">预计</text>
+                  <text class="meta-value">{{item.estimatedHours}}</text>
+                </view>
+                <view class="divider"></view>
+                <view class="meta-item">
+                  <text class="meta-label">最高海拔</text>
+                  <text class="meta-value">{{item.maxAltitudeM}}m</text>
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </block>
+    </view>
+  </block>
+</view>
