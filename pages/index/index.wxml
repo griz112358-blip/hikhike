@@ -46,12 +46,9 @@
     <text>大家都在搜</text>
   </view>
   <view class="popular-searches">
-    <text class="search-tag">林间穿越</text>
-    <text class="search-tag">瀑布景观</text>
-    <text class="search-tag">狗狗友好🐶</text>
-    <text class="search-tag">滨海路线🌊</text>
-    <text class="search-tag">溯溪目的地</text>
-    <text class="search-tag">公园步道⛰️</text>
+    <block wx:for="{{popularSearches}}" wx:key="objectId">
+      <text class="search-tag" data-id="{{item.objectId}}" bindtap="onCollectionTap">{{item.name}}</text>
+    </block>
   </view>
 
   <!-- Hot Destinations -->
