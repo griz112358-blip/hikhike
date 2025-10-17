@@ -44,7 +44,6 @@ Page({
   
   fetchPopularSearches() {
     const query = new AV.Query('Collections');
-    query.limit(6); // 限制获取6个收藏
     query.find().then((results) => {
       this.setData({
         popularSearches: results.map(item => ({
