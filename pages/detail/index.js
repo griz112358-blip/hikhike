@@ -27,14 +27,11 @@ Page({
     totalDistanceKmText: '0.00',
     // 展示信息
     title: '线路名称',
-    subtitle: '这里是副标题',
+    subtitle: '',
     coverImg: 'https://lc-DNB4W2Wu.cn-n1.lcfile.com/5Iws1zYmdjQGFgQYhUN27RI0MtOFgA3J/logo%E5%B0%81%E9%9D%A2.png',
     difficultyTag: '标准',
-    difficultyText: '小起伏，部分碎石路，需轻松力',
-    riskTag: '低风险',
-    riskText: '小坡度，有碎石，需注意',
+    difficultyLevels: [],
     seasonText: '3-8月',
-    durationText: '1天',
     estimatedHours: '--'
   },
 
@@ -48,6 +45,201 @@ Page({
     } catch (e) {
       // ignore
     }
+  },
+
+  // 生成难度等级进度条数据
+  generateDifficultyLevels(difficultyTag) {
+    const difficultyMap = {
+      '休闲': 1,
+      '入门': 2,
+      '进阶': 3,
+      '挑战': 4,
+      '极限': 5
+    };
+    
+    const level = difficultyMap[difficultyTag] || 1;
+    const colors = [
+      '#4CAF50', // 绿色 - 休闲
+      '#8BC34A', // 浅绿 - 入门
+      '#FFC107', // 黄色 - 进阶
+      '#FF9800', // 橙色 - 挑战
+      '#F44336'  // 红色 - 极限
+    ];
+    
+    const levels = [];
+    for (let i = 0; i < 5; i++) {
+      levels.push({
+        color: i < level ? colors[level - 1] : '#eeeeee'
+      });
+    }
+    
+    return levels;
+  },
+
+  // 计算两点间距离（米）
+  calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371000; // 地球半径（米）
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  },
+
+  // 处理海拔数据
+  processElevationData(lineCoordinates) {
+    if (!lineCoordinates || lineCoordinates.length < 2) {
+      return [];
+    }
+    
+    let totalDistance = 0;
+    const elevationPoints = [];
+    
+    // 第一个点
+    elevationPoints.push({
+      distance: 0,
+      elevation: lineCoordinates[0][2] || 0
+    });
+    
+    // 计算每个点的累计距离和海拔
+    for (let i = 1; i < lineCoordinates.length; i++) {
+      const prev = lineCoordinates[i-1];
+      const curr = lineCoordinates[i];
+      
+      const distance = this.calculateDistance(
+        prev[1], prev[0], 
+        curr[1], curr[0]
+      );
+      
+      totalDistance += distance;
+      elevationPoints.push({
+        distance: totalDistance,
+        elevation: curr[2] || 0
+      });
+    }
+    
+    return elevationPoints;
+  },
+
+  // 绘制海拔折线图
+  drawElevationChart(elevationData) {
+    if (!elevationData || elevationData.length === 0) {
+      return;
+    }
+    
+    const query = wx.createSelectorQuery();
+    query.select('#elevationChart').boundingClientRect();
+    query.select('.chart-container').boundingClientRect();
+    query.exec((res) => {
+      const canvasRect = res[0];
+      const containerRect = res[1];
+      if (!canvasRect || !containerRect) {
+        return;
+      }
+      const canvas = canvasRect;
+      const ctx = wx.createCanvasContext('elevationChart', this);
+      
+      // 使用容器尺寸绘制
+      const width = containerRect.width;
+      const height = 200;
+      const padding = 40;
+      const chartWidth = width - padding * 2;
+      const chartHeight = height - padding * 2;
+      
+      console.log('Canvas尺寸:', width, 'x', height);
+      
+      // 计算海拔范围
+      const elevations = elevationData.map(p => p.elevation);
+      const minElevation = Math.min(...elevations);
+      const maxElevation = Math.max(...elevations);
+      const elevationRange = maxElevation - minElevation;
+      
+      // 计算距离范围
+      const distances = elevationData.map(p => p.distance);
+      const maxDistance = Math.max(...distances);
+      
+      // 清空画布
+      ctx.clearRect(0, 0, width, height);
+      
+      // 绘制背景
+      ctx.setFillStyle('#f6f7f9');
+      ctx.fillRect(0, 0, width, height);
+      
+      // 绘制网格线
+      ctx.setStrokeStyle('#e9ecef');
+      ctx.setLineWidth(1);
+      
+      // 水平网格线
+      for (let i = 0; i <= 4; i++) {
+        const y = padding + (chartHeight / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
+      }
+      
+      // 垂直网格线
+      for (let i = 0; i <= 4; i++) {
+        const x = padding + (chartWidth / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(x, padding);
+        ctx.lineTo(x, height - padding);
+        ctx.stroke();
+      }
+      
+      // 绘制折线
+      ctx.setStrokeStyle('#2e7d32');
+      ctx.setLineWidth(1);
+      ctx.beginPath();
+      
+      elevationData.forEach((point, index) => {
+        const x = padding + (point.distance / maxDistance) * chartWidth;
+        const y = height - padding - ((point.elevation - minElevation) / elevationRange) * chartHeight;
+        
+        if (index === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      });
+      
+      ctx.stroke();
+      
+      // 绘制数据点
+      ctx.setFillStyle('#2e7d32');
+      elevationData.forEach((point) => {
+        const x = padding + (point.distance / maxDistance) * chartWidth;
+        const y = height - padding - ((point.elevation - minElevation) / elevationRange) * chartHeight;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+      
+      // 绘制坐标轴标签
+      ctx.setFillStyle('#666');
+      ctx.setFontSize(12);
+      
+      // Y轴标签（海拔）
+      for (let i = 0; i <= 4; i++) {
+        const elevation = minElevation + (elevationRange / 4) * i;
+        const y = height - padding - (chartHeight / 4) * i;
+        ctx.fillText(Math.round(elevation) + 'm', 5, y + 4);
+      }
+      
+      // X轴标签（距离）
+      for (let i = 0; i <= 4; i++) {
+        const distance = (maxDistance / 4) * i;
+        const x = padding + (chartWidth / 4) * i;
+        ctx.fillText((distance / 1000).toFixed(1) + 'km', x - 15, height - 10);
+      }
+      
+      ctx.draw(false, () => {
+        // 绘制完成
+      });
+    });
   },
 
   async onLoad(options) {
@@ -68,18 +260,25 @@ Page({
         const subtitle = obj.get('routeSubtitle') || this.data.subtitle
         const coverImg = obj.get('coverImg') || obj.get('coverUrl') || this.data.coverImg
         const difficultyTag = obj.get('difficultyTag') || this.data.difficultyTag
-        const difficultyText = obj.get('difficultyText') || this.data.difficultyText
-        const riskTag = obj.get('riskTag') || this.data.riskTag
-        const riskText = obj.get('riskText') || this.data.riskText
         const seasonText = obj.get('seasonText') || this.data.seasonText
-        const durationText = obj.get('durationText') || this.data.durationText
 
         const maxAltitudeM = obj.get('maxAltitudeM')
         const totalLengthKm = obj.get('totalLengthKm')
         const estimatedHours = obj.get('estimatedHours')
         const cumulativeAscentM = obj.get('cumulativeAscentM')
 
-        this.setData({ title, subtitle, coverImg, difficultyTag, difficultyText, riskTag, riskText, seasonText, durationText, estimatedHours, maxAltitudeM, totalLengthKm, cumulativeAscentM })
+        this.setData({ 
+          title, 
+          subtitle, 
+          coverImg, 
+          difficultyTag, 
+          seasonText, 
+          estimatedHours, 
+          maxAltitudeM, 
+          totalLengthKm, 
+          cumulativeAscentM,
+          difficultyLevels: this.generateDifficultyLevels(difficultyTag)
+        })
         let geojson
         if (typeof kmlContent === 'string') {
           try {
@@ -228,6 +427,24 @@ Page({
     this.setData({ latitude: mapConfig.latitude, longitude: mapConfig.longitude, scale: mapConfig.scale })
     const lineStringFeatures = this.pathData.features.filter(f => f.geometry.type === 'LineString')
     const lineCoordinates = lineStringFeatures.map(lineString => lineString.geometry.coordinates)
+    
+    // 处理海拔数据
+    if (lineCoordinates.length > 0) {
+      const elevationData = this.processElevationData(lineCoordinates.flat())
+      if (elevationData && elevationData.length > 0) {
+        const CHART_ACCURACY = 100;
+        if (elevationData.length > CHART_ACCURACY) {
+          const _elevationData = Array.from({length: CHART_ACCURACY}, (_, i) => {
+            const index = Math.floor(i * (elevationData.length / CHART_ACCURACY));
+            return elevationData[index];
+          })
+          this.drawElevationChart(_elevationData);
+        } else {
+          this.drawElevationChart(elevationData);
+        }
+        
+      }
+    }
     // 起终点标注
     const startFeature = this.pathData.features.find(f => f.id === 'startPoint')
     const endFeature = this.pathData.features.find(f => f.id === 'endPoint')
@@ -257,7 +474,9 @@ Page({
       polyline: polylineResult
     })
     // 地图渲染后自动适配视野
-    setTimeout(() => this.fitMapToRoute(), 0)
+    setTimeout(() => {
+      this.fitMapToRoute()
+    }, 0)
 
   }
 })

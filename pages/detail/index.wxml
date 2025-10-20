@@ -52,21 +52,33 @@
     <view class="list">
       <view class="row">
         <view class="row-label">难度</view>
-        <view class="row-extra">{{difficultyTag}}</view>
-        <view class="row-value">{{difficultyText}}</view>
-      </view>
-      <view class="row">
-        <view class="row-label">风险</view>
-        <view class="row-extra warn">{{riskTag}}</view>
-        <view class="row-value">{{riskText}}</view>
+        <view class="difficulty-progress">
+          <view class="progress-container">
+            <view class="progress-bar">
+              <view wx:for="{{difficultyLevels}}" wx:key="index" 
+                    class="progress-item" 
+                    style="background-color: {{item.color}}">
+              </view>
+            </view>
+            <view class="difficulty-text">{{difficultyTag}}</view>
+          </view>
+        </view>
       </view>
       <view class="row">
         <view class="row-label">适宜月份</view>
         <view class="row-value">{{seasonText}}</view>
       </view>
-      <view class="row">
-        <view class="row-label">时长</view>
-        <view class="row-value">{{durationText}}</view>
+    </view>
+
+    <!-- 海拔折线图 -->
+    <view class="elevation-card">
+      <view class="elevation-card-title">海拔变化</view>
+      <view class="chart-container">
+        <canvas id="elevationChart" 
+                canvas-id="elevationChart" 
+                class="elevation-chart"
+                disable-scroll="true">
+        </canvas>
       </view>
     </view>
 
