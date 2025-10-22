@@ -24,6 +24,9 @@
     </view>
   </view>
   <view class="bottom-bar">
+    <view class="back-btn" bindtap="onBackTap">
+      <text>返回</text>
+    </view>
     <view class="start-btn" bindtap="onStartRecord">
       <text>开始记录</text>
       <text class="arrow">›</text>

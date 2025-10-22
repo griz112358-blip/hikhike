@@ -166,6 +166,14 @@ Page({
     });
   },
 
+  onBackTap() {
+    if (getCurrentPages().length > 1) {
+      wx.navigateBack({ delta: 1 });
+    } else {
+      wx.switchTab({ url: '/pages/index/index' });
+    }
+  },
+
   onStartRecord() {
     // 地图移动到当前定位中心
     if (this.mapCtx && typeof this.mapCtx.moveToLocation === "function") {
