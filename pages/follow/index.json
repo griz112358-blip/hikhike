@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "开始记录",
-  "navigationStyle": "custom"
+  "navigationStyle": "custom",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
 }
 

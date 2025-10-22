@@ -183,4 +183,25 @@ Page({
     }
     wx.showToast({ title: "开始记录", icon: "none" });
   },
+
+  // 分享给好友
+  onShareAppMessage() {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    return {
+      title: 'HikHike - 开始徒步记录',
+      desc: '记录你的徒步之旅，分享美好时光',
+      path: '/pages/follow/index',
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    return {
+      title: 'HikHike - 开始徒步记录',
+      query: '',
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
+  }
 });

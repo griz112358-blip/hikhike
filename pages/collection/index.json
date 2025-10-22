@@ -1,4 +1,6 @@
 {
   "usingComponents": {},
-  "navigationBarTitleText": "收藏详情"
+  "navigationBarTitleText": "收藏详情",
+  "enableShareAppMessage": true,
+  "enableShareTimeline": true
 }

@@ -84,5 +84,33 @@ Page({
 
   onRetry: function () {
     this.fetchCollectionData(this.data.collectionId);
+  },
+
+  // 分享给好友
+  onShareAppMessage: function () {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    const { collection } = this.data;
+    const shareTitle = collection ? `${collection.name} - HikHike收藏` : 'HikHike - 徒步路线收藏';
+    const shareDesc = collection ? `探索${collection.name}的精彩路线` : '户外徒步路线助手，探索自然之美';
+    
+    return {
+      title: shareTitle,
+      desc: shareDesc,
+      path: `/pages/collection/index?id=${this.data.collectionId}`,
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline: function () {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    const { collection } = this.data;
+    const shareTitle = collection ? `${collection.name} - HikHike收藏` : 'HikHike - 徒步路线收藏';
+    
+    return {
+      title: shareTitle,
+      query: `id=${this.data.collectionId}`,
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
   }
 });

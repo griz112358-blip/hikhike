@@ -478,6 +478,35 @@ Page({
       this.fitMapToRoute()
     }, 0)
 
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    const { title, subtitle, coverImg, routeId } = this.data;
+    const shareTitle = title || 'HikHike - 徒步路线详情';
+    const shareDesc = subtitle || '户外徒步路线助手，探索自然之美';
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    const shareImage = coverImg || SHARE_DEFAULT_IMAGE_URL;
+    
+    return {
+      title: shareTitle,
+      desc: shareDesc,
+      path: `/pages/detail/index?id=${routeId}`,
+      imageUrl: shareImage
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const { title, routeId } = this.data;
+    const shareTitle = title || 'HikHike - 徒步路线详情';
+    
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    return {
+      title: shareTitle,
+      query: `id=${routeId}`,
+      imageUrl: this.data.coverImg || SHARE_DEFAULT_IMAGE_URL
+    };
   }
 })
 

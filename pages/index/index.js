@@ -4,38 +4,7 @@ const AV = require('../../utils/av.js');
 Page({
   data: {
     searchText: '',
-    hotRoutes: [
-      {
-        id: 1,
-        title: '天目秘境·大树王国',
-        description: '华东版"熊野古道",赏千年大树奇观',
-        image: 'https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png'
-      },
-      {
-        id: 2,
-        title: '腾冲高黎贡山雨林徒步',
-        description: '百花岭轻徒步,闯入森林秘境',
-        image: 'https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png'
-      }
-    ],
     popularSearches: [],
-    hotDestinations: [
-      {
-        id: 1,
-        name: '中国 香港',
-        image: 'https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png'
-      },
-      {
-        id: 2,
-        name: '中国 云南',
-        image: 'https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png'
-      },
-      {
-        id: 3,
-        name: '中国 新疆',
-        image: 'https://lc-DNB4W2Wu.cn-n1.lcfile.com/LPAMcJCFVuHigX1JlJj5epQxBKAAVN0E/Frame%206.png'
-      }
-    ]
   },
   
   onLoad() {
@@ -86,5 +55,26 @@ Page({
     wx.navigateTo({
       url: `/pages/collection/index?id=${id}`
     });
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    return {
+      title: 'HikHike - 户外徒步路线助手',
+      desc: '专业的徒步路线分享平台，探索自然之美',
+      path: '/pages/index/index',
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js');
+    return {
+      title: 'HikHike - 户外徒步路线助手',
+      query: '',
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
   }
 })

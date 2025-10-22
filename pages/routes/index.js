@@ -67,6 +67,27 @@ Page({
     // 优先使用 objectId 作为精确标识，其次回退到 routeKey 以兼容内置示例
     const query = id ? `id=${id}` : `route=${routeKey}`
     wx.navigateTo({ url: `/pages/detail/index?${query}` })
+  },
+
+  // 分享给好友
+  onShareAppMessage() {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js')
+    return {
+      title: 'HikHike - 徒步路线列表',
+      desc: '发现更多精彩的徒步路线，开启你的户外之旅',
+      path: '/pages/routes/index',
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const { SHARE_DEFAULT_IMAGE_URL } = require('../../utils/constants.js')
+    return {
+      title: 'HikHike - 徒步路线列表',
+      query: '',
+      imageUrl: SHARE_DEFAULT_IMAGE_URL
+    };
   }
 })
 
