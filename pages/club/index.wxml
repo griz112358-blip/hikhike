@@ -1,0 +1,26 @@
+<view class="container">
+  <block wx:if="{{clubs.length > 0}}">
+    <view class="club-list">
+      <navigator url="/pages/club_detail/index?id={{item.objectId}}" class="club-item" wx:for="{{clubs}}" wx:key="objectId">
+        <view class="club-header">
+          <image class="club-logo" src="{{item.logoUrl}}" mode="aspectFill"></image>
+          <view class="club-info">
+            <text class="club-name">{{item.name}}</text>
+            <text wx:if="{{item.description}}" class="club-description">{{item.description}}</text>
+            <text class="club-city">📍{{item.city}}出发</text>
+            <text class="club-cost">人均：{{item.cost}}</text>
+          </view>
+        </view>
+        <view class="club-actions">
+          <button wx:if="{{item.phoneNumber}}" class="action-btn action-btn-phone" bindtap="makePhoneCall" data-phonenumber="{{item.phoneNumber}}">拨打电话</button>
+          <button wx:if="{{item.wechatId}}" class="action-btn action-btn-wechat" bindtap="copyWechatId" data-wechatid="{{item.wechatId}}">复制微信</button>
+          <button wx:if="{{item.shortLink}}" class="action-btn action-btn-miniprogram" bindtap="goToMiniProgram" data-shortlink="{{item.shortLink}}">进入小程序</button>
+        </view>
+      </navigator>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="no-clubs">暂无俱乐部信息</view>
+  </block>
+  <view class="hint-text" bindtap="copyContactWechatId">信息上报和纠正可微信联系 Reykjavik2024</view>
+</view>

@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/routes/index",
+    "pages/club/index",
     "pages/detail/index",
     "pages/follow/index",
     "pages/search_results/index",
@@ -24,6 +25,12 @@
         "text": "全部线路",
         "iconPath": "assets/images/icons/map.png",
         "selectedIconPath": "assets/images/icons/map-s.png"
+      },
+      {
+        "pagePath": "pages/club/index",
+        "text": "俱乐部",
+        "iconPath": "assets/images/icons/club.png",
+        "selectedIconPath": "assets/images/icons/club-s.png"
       }
     ]
   },

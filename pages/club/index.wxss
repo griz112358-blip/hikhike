@@ -1,0 +1,119 @@
+.container {
+  padding: 20rpx;
+}
+
+.club-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.club-item {
+  display: flex;
+  flex-direction: column; /* 让内容垂直堆叠 */
+  align-items: flex-start; /* 保持左对齐 */
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  background-color: #fff;
+  border-radius: 8rpx;
+  box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+}
+
+.club-header {
+  display: flex; /* 让 logo 和 info 保持并排 */
+  align-items: center;
+  width: 100%; /* 确保占据整行 */
+  margin-bottom: 20rpx; /* 与下方按钮组的间距 */
+}
+
+.club-logo {
+  width: 100rpx; /* 调整 logo 大小 */
+  height: 100rpx; /* 调整 logo 大小 */
+  border-radius: 50%;
+  margin-right: 20rpx;
+}
+
+.club-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.club-name {
+  font-size: 30rpx; /* 调整字体大小 */
+  font-weight: bold;
+  margin-bottom: 5rpx;
+}
+
+.club-description {
+  font-size: 26rpx; /* 调整字体大小 */
+  color: #666;
+  margin-bottom: 0;
+}
+
+.club-city {
+  font-size: 26rpx; /* 调整字体大小 */
+  color: #666;
+  margin-bottom: 0;
+}
+
+.club-cost {
+  font-size: 26rpx; /* 调整字体大小 */
+  color: #666;
+  margin-bottom: 0;
+}
+
+.club-contact {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.no-clubs {
+  text-align: center;
+  padding: 50rpx;
+  color: #999;
+  font-size: 32rpx;
+}
+
+.club-actions {
+  text-align: right;
+  width: 100%;
+}
+
+.action-btn {
+  display: inline-block;
+  width: 160rpx; /* 固定宽度 */
+  margin-left: 15rpx; /* 调整按钮间距，只保留左侧间距 */
+  padding: 18rpx 0; /* 增加内边距以提高行高 */
+  font-size: 24rpx;
+  border-radius: 40rpx;
+  text-align: center;
+  border: none;
+  outline: none;
+  line-height: 1; /* 保持文字垂直居中 */
+  color: #fff; /* 将文字颜色改为白色 */
+}
+
+.action-btn::after {
+  border: none;
+}
+
+/* 针对不同按钮设置背景色 */
+.action-btn-phone {
+  background-color: #4CAF50; /* 绿色 */
+}
+
+.action-btn-wechat {
+  background-color: #2196F3; /* 蓝色 */
+}
+
+.action-btn-miniprogram {
+  background-color: #FF9800; /* 橙色 */
+}
+
+.hint-text {
+  text-align: center;
+  color: #999;
+  font-size: 24rpx;
+  margin-top: 30rpx;
+  padding-bottom: 20rpx; /* 增加底部内边距 */
+}
