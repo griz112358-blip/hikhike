@@ -3,6 +3,17 @@ App({
   onLaunch() {
     console.log('App launched.')
     
+    // 初始化云开发
+    if (!wx.cloud) {
+      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
+    } else {
+      wx.cloud.init({
+        env: 'cloud1-1g6k23o45e657c65', // 云开发环境ID
+        traceUser: true,
+      })
+      console.log('云开发初始化完成')
+    }
+    
     // 初始化系统信息，防止 LifeCycle 访问 null 对象
     this.initSystemInfo()
   },

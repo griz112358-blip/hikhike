@@ -10,8 +10,6 @@ function loadPathDataById(routeId) {
   }
 }
 
-const AV = require('../../utils/av.js')
-
 Page({
   data: {
     latitude: 31.229679,
@@ -47,6 +45,64 @@ Page({
     }
   },
 
+  // 计算难度等级（基于距离、爬升、海拔）
+  calculateDifficulty(length_km, totalAscentM, maxAltitudeM) {
+    // 计算综合评分
+    let score = 0
+
+    // 距离因素（最大 25 分）
+    if (length_km < 5) {
+      score += 5
+    } else if (length_km < 10) {
+      score += 10
+    } else if (length_km < 20) {
+      score += 15
+    } else if (length_km < 30) {
+      score += 20
+    } else {
+      score += 25
+    }
+
+    // 累计爬升因素（最大 40 分）
+    if (totalAscentM < 300) {
+      score += 5
+    } else if (totalAscentM < 500) {
+      score += 10
+    } else if (totalAscentM < 800) {
+      score += 20
+    } else if (totalAscentM < 1200) {
+      score += 30
+    } else {
+      score += 40
+    }
+
+    // 最高海拔因素（最大 35 分）
+    if (maxAltitudeM < 1000) {
+      score += 5
+    } else if (maxAltitudeM < 2000) {
+      score += 10
+    } else if (maxAltitudeM < 3000) {
+      score += 20
+    } else if (maxAltitudeM < 4000) {
+      score += 30
+    } else {
+      score += 35
+    }
+
+    // 根据总分返回难度等级
+    if (score < 25) {
+      return '休闲'
+    } else if (score < 40) {
+      return '入门'
+    } else if (score < 60) {
+      return '进阶'
+    } else if (score < 80) {
+      return '挑战'
+    } else {
+      return '极限'
+    }
+  },
+
   // 生成难度等级进度条数据
   generateDifficultyLevels(difficultyTag) {
     const difficultyMap = {
@@ -56,7 +112,7 @@ Page({
       '挑战': 4,
       '极限': 5
     };
-    
+
     const level = difficultyMap[difficultyTag] || 1;
     const colors = [
       '#4CAF50', // 绿色 - 休闲
@@ -65,14 +121,14 @@ Page({
       '#FF9800', // 橙色 - 挑战
       '#F44336'  // 红色 - 极限
     ];
-    
+
     const levels = [];
     for (let i = 0; i < 5; i++) {
       levels.push({
         color: i < level ? colors[level - 1] : '#eeeeee'
       });
     }
-    
+
     return levels;
   },
 
@@ -245,58 +301,104 @@ Page({
   async onLoad(options) {
     // this.ensureSystemInfo()
     const opt = options || {}
-    // 支持两种方式：id（LeanCloud objectId）或 route（本地内置 key）
+    // 支持两种方式：id（云开发文档ID）或 route（本地内置 key）
     const id = opt.id
     const routeKey = opt.route
     try {
       if (id) {
         this.setData({ routeId: id })
         wx.showLoading({ title: '加载中', mask: true })
-        const obj = await new AV.Query('KMLData').get(id)
-        // 读取 kmlContent；要求云端字段存的是与 assets/path1.js 相同结构的 JSON 字符串
-        const kmlContent = obj.get('kmlContent')
-        // 详情展示字段（可选）
-        const title = obj.get('routeName') || this.data.title
-        const subtitle = obj.get('routeSubtitle') || this.data.subtitle
-        const coverImg = obj.get('coverImg') || obj.get('coverUrl') || this.data.coverImg
-        const difficultyTag = obj.get('difficultyTag') || this.data.difficultyTag
-        const seasonText = obj.get('seasonText') || this.data.seasonText
+        
+        // 从云开发数据库读取路线数据
+        const db = wx.cloud.database()
+        const res = await db.collection('routes').doc(id).get()
+        const routeData = res.data
+        
+        if (!routeData) {
+          throw new Error('路线不存在')
+        }
+        
+        // 从 points 数组生成 GeoJSON 格式
+        const points = routeData.points || []
+        if (points.length === 0) {
+          throw new Error('路线数据为空')
+        }
+        
+        // 转换为 GeoJSON 格式
+        const geojson = {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              id: 'routeLine',
+              geometry: {
+                type: 'LineString',
+                coordinates: points.map(p => [p[0], p[1], p[2] || 0])
+              },
+              properties: {}
+            },
+            {
+              type: 'Feature',
+              id: 'startPoint',
+              geometry: {
+                type: 'Point',
+                coordinates: points[0]
+              },
+              properties: { name: '起点' }
+            },
+            {
+              type: 'Feature',
+              id: 'endPoint',
+              geometry: {
+                type: 'Point',
+                coordinates: points[points.length - 1]
+              },
+              properties: { name: '终点' }
+            }
+          ]
+        }
+        
+        // 设置展示字段
+        const title = routeData.name || this.data.title
+        const length_km = routeData.length_km || 0
+        const pointCount = routeData.pointCount || 0
+        
+        // 计算最高海拔
+        const elevations = points.map(p => p[2] || 0).filter(e => e > 0)
+        const maxAltitudeM = elevations.length > 0 ? Math.max(...elevations) : 0
+        
+        // 计算累计爬升（保留两位小数，避免浮点精度问题）
+        let totalAscent = 0
+        for (let i = 1; i < points.length; i++) {
+          const prevElev = points[i - 1][2] || 0
+          const currElev = points[i][2] || 0
+          if (currElev > prevElev) {
+            const diff = currElev - prevElev
+            totalAscent = Math.round((totalAscent + diff) * 100) / 100
+          }
+        }
+        totalAscent = parseFloat(totalAscent.toFixed(2))
+        
+        // 估算时间（简单算法：每小时走 3 公里，每 100 米爬升加 5 分钟）
+        const timeFromDistance = parseFloat((length_km / 3).toFixed(2))  // 小时
+        const timeFromAscent = parseFloat(((totalAscent / 100) * 5 / 60).toFixed(2))  // 小时
+        const estimatedHours = parseFloat((timeFromDistance + timeFromAscent).toFixed(1))
 
-        const maxAltitudeM = obj.get('maxAltitudeM')
-        const totalLengthKm = obj.get('totalLengthKm')
-        const estimatedHours = obj.get('estimatedHours')
-        const cumulativeAscentM = obj.get('cumulativeAscentM')
+        // 计算难度等级
+        const difficultyTag = this.calculateDifficulty(length_km, totalAscent, maxAltitudeM)
 
-        this.setData({ 
-          title, 
-          subtitle, 
-          coverImg, 
-          difficultyTag, 
-          seasonText, 
-          estimatedHours, 
-          maxAltitudeM, 
-          totalLengthKm, 
-          cumulativeAscentM,
+        this.setData({
+          title,
+          subtitle: `${pointCount} 个轨迹点`,
+          maxAltitudeM,
+          totalLengthKm: length_km,
+          cumulativeAscentM: totalAscent,
+          estimatedHours,
+          difficultyTag,
           difficultyLevels: this.generateDifficultyLevels(difficultyTag)
         })
-        let geojson
-        if (typeof kmlContent === 'string') {
-          try {
-            geojson = JSON.parse(kmlContent)
-          } catch (e) {
-            console.error('kmlContent 不是合法 JSON，尝试直接使用对象:', e)
-            geojson = kmlContent
-          }
-        } else {
-          geojson = kmlContent
-        }
-        if (!geojson || !geojson.features) {
-          // 回退到本地示例
-          console.warn('kmlContent 缺少 features，回退到本地示例数据')
-          this.pathData = loadPathDataById('path1')
-        } else {
-          this.pathData = geojson
-        }
+        
+        this.pathData = geojson
       } else {
         const routeId = routeKey ? routeKey : 'path1'
         this.setData({ routeId })

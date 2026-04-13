@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-04-13T09:27:12.738Z",
+  "source": "2bulu",
+  "total": 3,
+  "success": 3,
+  "failed": 0,
+  "totalLength": "45.14",
+  "results": [
+    {
+      "success": true,
+      "filename": "小红书此生必徒虎跳峡站.kml",
+      "routeName": "小红书此生必徒虎跳峡站",
+      "result": {
+        "success": true,
+        "name": "小红书此生必徒虎跳峡站",
+        "pointCount": 1442,
+        "length_km": 15.3,
+        "recordId": "f0df711e69dcb6ee0416215b745bfbaa"
+      }
+    },
+    {
+      "success": true,
+      "filename": "武功山反穿.kml",
+      "routeName": "武功山反穿",
+      "result": {
+        "success": true,
+        "name": "武功山反穿",
+        "pointCount": 9150,
+        "length_km": 23.67,
+        "recordId": "8d2e20b369dcb6ef0415b37271cf4278"
+      }
+    },
+    {
+      "success": true,
+      "filename": "走马岗 2025-11-22.kml",
+      "routeName": "走马岗 2025-11-22",
+      "result": {
+        "success": true,
+        "name": "走马岗 2025-11-22",
+        "pointCount": 1106,
+        "length_km": 6.17,
+        "recordId": "c3459b2a69dcb6f00416aed838f41653"
+      }
+    }
+  ]
+}

@@ -3,6 +3,7 @@
   "projectname": "hik hike",
   "description": "",
   "appid": "wx544103e63628f8f5",
+  "cloudfunctionRoot": "cloudfunctions/",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -43,5 +44,6 @@
     "tabSize": 2
   },
   "libVersion": "3.10.1",
-  "condition": {}
+  "condition": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }
