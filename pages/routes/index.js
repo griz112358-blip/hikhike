@@ -107,7 +107,7 @@ Page({
 
       const res = await db.collection('routes')
         .orderBy('imported_at', 'desc')
-        .limit(100)
+        .limit(50)
         .get()
 
       const routes = res.data.map(item => {

@@ -1,45 +1,57 @@
 {
-  "timestamp": "2026-04-13T09:27:12.738Z",
+  "timestamp": "2026-04-16T07:22:52.973Z",
   "source": "2bulu",
-  "total": 3,
-  "success": 3,
+  "total": 4,
+  "success": 4,
   "failed": 0,
-  "totalLength": "45.14",
+  "totalLength": "38.46",
   "results": [
     {
       "success": true,
-      "filename": "小红书此生必徒虎跳峡站.kml",
-      "routeName": "小红书此生必徒虎跳峡站",
+      "filename": "宁波四明山十字裤.kml",
+      "routeName": "宁波四明山十字裤",
       "result": {
         "success": true,
-        "name": "小红书此生必徒虎跳峡站",
-        "pointCount": 1442,
-        "length_km": 15.3,
-        "recordId": "f0df711e69dcb6ee0416215b745bfbaa"
+        "name": "宁波四明山十字裤",
+        "pointCount": 946,
+        "length_km": 10.06,
+        "recordId": "f0df711e69e08e4a0482e4291d55b5e2"
       }
     },
     {
       "success": true,
-      "filename": "武功山反穿.kml",
-      "routeName": "武功山反穿",
+      "filename": "安吉章里古道.kml",
+      "routeName": "安吉章里古道",
       "result": {
         "success": true,
-        "name": "武功山反穿",
-        "pointCount": 9150,
-        "length_km": 23.67,
-        "recordId": "8d2e20b369dcb6ef0415b37271cf4278"
+        "name": "安吉章里古道",
+        "pointCount": 736,
+        "length_km": 10.27,
+        "recordId": "93abbbd769e08e4b048085dc0cb7841c"
       }
     },
     {
       "success": true,
-      "filename": "走马岗 2025-11-22.kml",
-      "routeName": "走马岗 2025-11-22",
+      "filename": "盐帮古道环线（盐帮十八渡）.kml",
+      "routeName": "盐帮古道环线（盐帮十八渡）",
       "result": {
         "success": true,
-        "name": "走马岗 2025-11-22",
-        "pointCount": 1106,
-        "length_km": 6.17,
-        "recordId": "c3459b2a69dcb6f00416aed838f41653"
+        "name": "盐帮古道环线（盐帮十八渡）",
+        "pointCount": 1186,
+        "length_km": 12.64,
+        "recordId": "93abbbd769e08e4c048085e87f044322"
+      }
+    },
+    {
+      "success": true,
+      "filename": "绍兴上虞梅坞古道.kml",
+      "routeName": "绍兴上虞梅坞古道",
+      "result": {
+        "success": true,
+        "name": "绍兴上虞梅坞古道",
+        "pointCount": 521,
+        "length_km": 5.49,
+        "recordId": "33956e3d69e08e4c048001a500adcf72"
       }
     }
   ]

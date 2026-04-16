@@ -63,20 +63,22 @@ async function parseKMLFile(filePath) {
   
   // 1. 优先查找 gx:Track 格式（2bulu等）
   const trackFolder = folders.find(f => f.id === 'TbuluTrackFolder' || f.name === '轨迹');
-  
+
   if (trackFolder && trackFolder.Placemark) {
     const placemarks = Array.isArray(trackFolder.Placemark) ? trackFolder.Placemark : [trackFolder.Placemark];
     const trackPlacemark = placemarks.find(p => p['gx:Track']);
 
     if (trackPlacemark && trackPlacemark['gx:Track']) {
-      const track = trackPlacemark['gx:Track'];
-      const coords = Array.isArray(track['gx:coord']) ? track['gx:coord'] : [track['gx:coord'] || ''];
+      // 使用正则表达式提取 gx:coord 标签，避免 xml2js 解析器的限制
+      const coordMatches = content.match(/<gx:coord>\s*([^<]+)\s*<\/gx:coord>/g);
 
-      points = coords.map(coordStr => {
-        if (!coordStr) return null;
-        const [lng, lat, ele = 0] = String(coordStr).trim().split(/\s+/).map(Number);
-        return [lng, lat, Number(ele.toFixed(2))];
-      }).filter(p => p && !isNaN(p[0]) && !isNaN(p[1]));
+      if (coordMatches && coordMatches.length > 0) {
+        points = coordMatches.map(match => {
+          const coordStr = match.replace(/<\/?gx:coord>/g, '').trim();
+          const [lng, lat, ele = 0] = coordStr.split(/\s+/).map(Number);
+          return [lng, lat, Number(ele.toFixed(2))];
+        }).filter(p => p && !isNaN(p[0]) && !isNaN(p[1]));
+      }
     }
   }
   

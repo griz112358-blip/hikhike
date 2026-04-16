@@ -1,20 +1,18 @@
-const AV = require('../../utils/av.js');
-
 Page({
   data: {
     keyword: '',
     searchResults: [],
-    loading: true, // 添加 loading 状态
+    loading: true,
   },
   onLoad: function (options) {
     this.setData({
-      keyword: options.keyword || ''
+      keyword: decodeURIComponent(options.keyword || '')
     });
     if (this.data.keyword) {
       this.fetchSearchResults(this.data.keyword);
     } else {
       this.setData({
-        loading: false // 如果没有关键字，直接设置 loading 为 false
+        loading: false
       });
     }
   },
@@ -22,19 +20,65 @@ Page({
     this.setData({
       loading: true
     });
-    const query = new AV.Query('KMLData');
-    query.contains('routeName', keyword); // 假设KMLData表中有一个name字段用于搜索，与WXML中的item.name对应
-    query.find().then((results) => {
-      this.setData({
-        searchResults: results.map(item => item.toJSON()),
-        loading: false
+
+    const db = wx.cloud.database();
+    const _ = db.command;
+
+    db.collection('routes')
+      .where({
+        name: db.RegExp({
+          regexp: keyword,
+          options: 'i'
+        })
+      })
+      .orderBy('imported_at', 'desc')
+      .limit(50)
+      .get()
+      .then(res => {
+        const results = res.data.map(item => {
+          // 计算最高海拔
+          const points = item.points || [];
+          const elevations = points.map(p => p[2] || 0).filter(e => e > 0);
+          const maxAltitudeM = elevations.length > 0 ? Math.max(...elevations) : 0;
+
+          // 计算累计爬升
+          let totalAscent = 0;
+          if (points.length >= 2) {
+            for (let i = 1; i < points.length; i++) {
+              const prevElev = points[i - 1][2] || 0;
+              const currElev = points[i][2] || 0;
+              if (currElev > prevElev) {
+                totalAscent = Math.round((totalAscent + (currElev - prevElev)) * 100) / 100;
+              }
+            }
+          }
+
+          // 计算预估时间
+          const length_km = item.length_km || 0;
+          const timeFromDistance = parseFloat((length_km / 3).toFixed(2));
+          const timeFromAscent = parseFloat(((totalAscent / 100) * 5 / 60).toFixed(2));
+          const estimatedHours = parseFloat((timeFromDistance + timeFromAscent).toFixed(1));
+
+          return {
+            objectId: item._id,
+            routeName: item.name,
+            totalLengthKm: length_km,
+            estimatedHours: estimatedHours,
+            maxAltitudeM: maxAltitudeM
+          };
+        });
+
+        this.setData({
+          searchResults: results,
+          loading: false
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching search results:', error);
+        this.setData({
+          loading: false
+        });
       });
-    }).catch((error) => {
-      console.error('Error fetching search results:', error);
-      this.setData({
-        loading: false
-      });
-    });
   },
   onRouteTap: function (event) {
     const id = event.currentTarget.dataset.id;

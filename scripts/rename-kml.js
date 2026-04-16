@@ -16,10 +16,99 @@ function log(message, color = 'reset') {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
+// 安全输出文件名，避免终端编码问题
+function safeFilename(filename) {
+  try {
+    // 只对确实包含乱码的文件名进行 GBK 解码
+    if (hasGarbledText(filename)) {
+      try {
+        const buffer = Buffer.from(filename, 'binary');
+        const decoded = require('iconv-lite').decode(buffer, 'gbk');
+        return decoded + (filename !== decoded ? ` (原始: ${filename})` : '');
+      } catch (e) {
+        return filename;
+      }
+    }
+    return filename;
+  } catch (err) {
+    return filename;
+  }
+}
+
+// GBK 解码函数
+function fixGBKFilename(filename) {
+  const iconv = require('iconv-lite');
+
+  try {
+    // 1. 先把被错误解码的字符串转回字节（使用 binary 保持原始字节）
+    const buffer = Buffer.from(filename, 'binary');
+
+    // 2. 用 GBK 正确解码这些字节
+    let fixed = iconv.decode(buffer, 'gbk');
+
+    // 3. 清理可能的异常字符（保险起见）
+    fixed = fixed.replace(/\uFFFD/g, ''); // 移除解码失败的替换字符
+    fixed = fixed.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, ''); // 移除控制字符
+    fixed = fixed.replace(/\x00/g, ''); // 移除 null bytes
+
+    return fixed;
+  } catch (err) {
+    // 如果解码失败，返回原文件名
+    if (process.env.DEBUG === 'true') {
+      log(`  GBK解码失败: ${err.message}`, 'yellow');
+    }
+    return filename;
+  }
+}
+
+// 检查文件名是否包含乱码
+function hasGarbledText(filename) {
+  // 更严格的乱码检测：只检测典型的 GBK 乱码字符
+  // 这些字符通常出现在 GBK 编码被错误解释为其他编码时
+  const gbkGarbledPattern = /[ÙÜÉ½ÐÄÏßÀÅþ²ª°®µ÷£¬»¨¾§Ÿ¹º»¼½¿]/;
+
+  // 检查是否包含明显的控制字符（除了常见的换行符等）
+  const controlChars = /[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/;
+
+  // 检查是否包含大量的解码失败字符
+  const replacementChars = (filename.match(/\uFFFD/g) || []).length;
+  if (replacementChars > 2) {
+    return true;
+  }
+
+  return gbkGarbledPattern.test(filename) || controlChars.test(filename);
+}
+
+// 从 KML 文件内容中提取正确的名称
+function extractNameFromKML(filePath) {
+  try {
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // 优先匹配 CDATA 格式
+    const cdataMatch = content.match(/<name[^>]*>\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*<\/name>/);
+    if (cdataMatch) {
+      return cdataMatch[1].trim().replace(/\s+/g, ' ');
+    }
+
+    // 如果没有 CDATA，匹配普通格式
+    const nameMatch = content.match(/<name[^>]*>([^<]+)<\/name>/);
+    if (nameMatch) {
+      return nameMatch[1].trim();
+    }
+
+    return null;
+  } catch (err) {
+    return null;
+  }
+}
+
 // 重命名KML文件
 function renameKMLFiles(directory) {
-  const files = fs.readdirSync(directory);
-  const kmlFiles = files.filter(f => f.toLowerCase().endsWith('.kml'));
+  // 使用 buffer encoding 获取原始文件名（避免 NFD 归一化问题）
+  const files = fs.readdirSync(directory, { encoding: 'buffer' });
+  const kmlFiles = files
+    .map(f => f.toString('utf8'))
+    .filter(f => f.toLowerCase().endsWith('.kml'));
 
   log(`\n找到 ${kmlFiles.length} 个 KML 文件`, 'cyan');
 
@@ -28,50 +117,64 @@ function renameKMLFiles(directory) {
     const oldPath = path.join(directory, filename);
 
     try {
-      const content = fs.readFileSync(oldPath, 'utf-8');
-      // 支持两种格式:
-      // 1. <name><![CDATA[走马岗 2025-11-22]]></name>
-      // 2. <name>走马岗 2025-11-22</name>
-      let kmlName = null;
+      // 1. 优先尝试 GBK 解码文件名（这是最可靠的方式）
+      const fixedFilename = fixGBKFilename(filename);
 
-      // 优先匹配 CDATA 格式
-      const cdataMatch = content.match(/<name[^>]*><!\[CDATA\[([^\]]+)\]\]><\/name>/);
-      if (cdataMatch) {
-        kmlName = cdataMatch[1].trim();
-      } else {
-        // 如果没有 CDATA，匹配普通格式
-        const nameMatch = content.match(/<name[^>]*>([^<]+)<\/name>/);
-        if (nameMatch) {
-          kmlName = nameMatch[1].trim();
+      if (fixedFilename !== filename && hasGarbledText(filename)) {
+        const ext = path.extname(fixedFilename);
+        const newName = fixedFilename.replace(/\.[^.]+$/, '');
+        const newFilename = newName + ext;
+
+        const newPath = path.join(directory, newFilename);
+        try {
+          if (fs.existsSync(newPath)) {
+            fs.unlinkSync(newPath);
+          }
+
+          fs.renameSync(oldPath, newPath);
+          log(`  重命名 (GBK): ${safeFilename(filename)}`, 'yellow');
+          log(`     -> ${newFilename}`, 'cyan');
+          renamedCount++;
+        } catch (err) {
+          log(`  重命名失败: ${safeFilename(filename)} - ${err.message}`, 'red');
         }
-      }
+      } else {
+        // 2. 如果文件名没有乱码，尝试从 KML 内容中提取正确的名称
+        const kmlName = extractNameFromKML(oldPath);
 
-      if (kmlName) {
-        const ext = path.extname(filename);
-        const newName = kmlName + ext;
+        if (kmlName) {
+          const ext = path.extname(filename);
+          const newName = kmlName + ext;
 
-        if (newName !== filename) {
-          const newPath = path.join(directory, newName);
-          try {
-            if (fs.existsSync(newPath)) {
-              fs.unlinkSync(newPath);
+          // 将文件名和 KML 名称都转换为 NFC 后比较
+          const filenameNFC = filename.normalize('NFC');
+          const newNameNFC = newName.normalize('NFC');
+
+          // 只有当 KML 中的名称和当前文件名不同时才重命名
+          if (newNameNFC !== filenameNFC) {
+            const newPath = path.join(directory, newName);
+            try {
+              // 如果目标文件已存在，删除它
+              if (fs.existsSync(newPath)) {
+                fs.unlinkSync(newPath);
+              }
+
+              fs.renameSync(oldPath, newPath);
+              log(`  重命名: ${safeFilename(filename)}`, 'yellow');
+              log(`     -> ${newName}`, 'cyan');
+              renamedCount++;
+            } catch (err) {
+              log(`  重命名失败: ${safeFilename(filename)} - ${err.message}`, 'red');
             }
-
-            fs.renameSync(oldPath, newPath);
-            log(`  重命名: ${filename}`, 'yellow');
-            log(`     -> ${newName}`, 'cyan');
-            renamedCount++;
-          } catch (err) {
-            log(`  重命名失败: ${filename} - ${err.message}`, 'red');
+          } else {
+            log(`  跳过: ${filename} (名称已正确)`, 'green');
           }
         } else {
-          log(`  跳过: ${filename} (名称已正确)`, 'green');
+          log(`  跳过: ${filename} (无法在KML中找到名称且无乱码)`, 'yellow');
         }
-      } else {
-        log(`  跳过: ${filename} (无法在KML中找到名称)`, 'yellow');
       }
     } catch (err) {
-      log(`  读取失败: ${filename} - ${err.message}`, 'red');
+      log(`  读取失败: ${safeFilename(filename)} - ${err.message}`, 'red');
     }
   });
 
@@ -81,7 +184,9 @@ function renameKMLFiles(directory) {
     log('\n所有文件名均已正确', 'green');
   }
 
-  return fs.readdirSync(directory).filter(f => f.toLowerCase().endsWith('.kml'));
+  return fs.readdirSync(directory, { encoding: 'buffer' })
+    .map(f => f.toString('utf8'))
+    .filter(f => f.toLowerCase().endsWith('.kml'));
 }
 
 // 主函数
