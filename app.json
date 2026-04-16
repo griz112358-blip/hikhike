@@ -6,7 +6,9 @@
     "pages/detail/index",
     "pages/follow/index",
     "pages/search_results/index",
-    "pages/collection/index"
+    "pages/collection/index",
+    "pages/login/index",
+    "pages/profile/index"
   ],
   "tabBar": {
     "color": "#bfbfbf",
@@ -31,6 +33,12 @@
         "text": "俱乐部",
         "iconPath": "assets/images/icons/club.png",
         "selectedIconPath": "assets/images/icons/club-s.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "assets/images/icons/user.png",
+        "selectedIconPath": "assets/images/icons/user-s.png"
       }
     ]
   },

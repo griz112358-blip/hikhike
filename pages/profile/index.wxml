@@ -1,0 +1,89 @@
+<view class="profile-container">
+  <!-- 未登录状态 -->
+  <view class="not-logged-in" wx:if="{{!isLoggedIn}}">
+    <view class="empty-state">
+      <image class="empty-icon" src="/assets/images/icons/user.png" mode="aspectFit"></image>
+      <text class="empty-text">登录后查看个人信息</text>
+      <button class="login-btn" bindtap="goToLogin">立即登录</button>
+    </view>
+  </view>
+
+  <!-- 已登录状态 -->
+  <view class="logged-in" wx:if="{{isLoggedIn}}">
+    <!-- 用户信息 -->
+    <view class="user-info">
+      <view class="avatar">
+        <image class="avatar-img" src="{{userInfo.avatarUrl || '/assets/images/icons/user.png'}}" mode="aspectFill"></image>
+      </view>
+      <view class="user-details">
+        <text class="username">{{userInfo.nickName || '户外爱好者'}}</text>
+        <text class="user-id">ID: {{userInfo.openid ? userInfo.openid.substring(0, 8) + '...' : ''}}</text>
+      </view>
+    </view>
+
+    <!-- 统计信息 -->
+    <view class="stats">
+      <view class="stat-item" bindtap="onMyRoutes">
+        <text class="stat-value">{{stats.routes}}</text>
+        <text class="stat-label">我的路线</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item" bindtap="onCollections">
+        <text class="stat-value">{{stats.collections}}</text>
+        <text class="stat-label">收藏</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item" bindtap="onFollows">
+        <text class="stat-value">{{stats.follows}}</text>
+        <text class="stat-label">关注</text>
+      </view>
+    </view>
+
+    <!-- 功能列表 -->
+    <view class="menu-list">
+      <view class="menu-item" bindtap="onCollections">
+        <image class="menu-icon" src="/assets/images/icons/heart.png" mode="aspectFit"></image>
+        <text class="menu-text">我的收藏</text>
+        <text class="menu-arrow">›</text>
+      </view>
+
+      <view class="menu-item" bindtap="onFollows">
+        <image class="menu-icon" src="/assets/images/icons/follow.png" mode="aspectFit"></image>
+        <text class="menu-text">我的关注</text>
+        <text class="menu-arrow">›</text>
+      </view>
+
+      <view class="menu-item" bindtap="onMyRoutes">
+        <image class="menu-icon" src="/assets/images/icons/map.png" mode="aspectFit"></image>
+        <text class="menu-text">我的路线</text>
+        <text class="menu-arrow">›</text>
+      </view>
+
+      <view class="menu-divider"></view>
+
+      <view class="menu-item" bindtap="onAbout">
+        <image class="menu-icon" src="/assets/images/icons/info.png" mode="aspectFit"></image>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">›</text>
+      </view>
+
+      <view class="menu-item" bindtap="onContact">
+        <image class="menu-icon" src="/assets/images/icons/service.png" mode="aspectFit"></image>
+        <text class="menu-text">联系客服</text>
+        <text class="menu-arrow">›</text>
+      </view>
+
+      <view class="menu-divider"></view>
+
+      <view class="menu-item logout" bindtap="onLogout">
+        <image class="menu-icon logout-icon" src="/assets/images/icons/logout.png" mode="aspectFit"></image>
+        <text class="menu-text logout-text">退出登录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Loading 状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>
