@@ -9,49 +9,50 @@ const https = require('https');
 // 加载配置
 const config = require('./config');
 
-console.log('=================================');
-console.log('   云函数连接诊断工具');
-console.log('=================================\n');
+async function main() {
+  console.log('=================================');
+  console.log('   云函数连接诊断工具');
+  console.log('=================================\n');
 
-// 1. 检查配置
-console.log('1. 检查配置文件');
-console.log(`   云函数URL: ${config.cloudFunction.url}`);
-console.log(`   超时设置: ${config.cloudFunction.timeout}ms`);
-console.log(`   日志级别: ${config.logLevel}\n`);
+  // 1. 检查配置
+  console.log('1. 检查配置文件');
+  console.log(`   云函数URL: ${config.cloudFunction.url}`);
+  console.log(`   超时设置: ${config.cloudFunction.timeout}ms`);
+  console.log(`   日志级别: ${config.logLevel}\n`);
 
-// 2. 检查测试文件
-const testFile = path.join(__dirname, config.kmlDirectory, 'test-route.kml');
-console.log('2. 检查测试文件');
-if (fs.existsSync(testFile)) {
-  console.log(`   ✓ 文件存在: ${testFile}`);
-  const stats = fs.statSync(testFile);
-  console.log(`   文件大小: ${stats.size} bytes\n`);
-} else {
-  console.log(`   ✗ 文件不存在: ${testFile}`);
-  console.log('   提示: 请先运行 npm install 或创建测试文件\n');
-  process.exit(1);
-}
+  // 2. 检查测试文件
+  const testFile = path.join(__dirname, config.kmlDirectory, 'test-route.kml');
+  console.log('2. 检查测试文件');
+  if (fs.existsSync(testFile)) {
+    console.log(`   ✓ 文件存在: ${testFile}`);
+    const stats = fs.statSync(testFile);
+    console.log(`   文件大小: ${stats.size} bytes\n`);
+  } else {
+    console.log(`   ✗ 文件不存在: ${testFile}`);
+    console.log('   提示: 请先运行 npm install 或创建测试文件\n');
+    process.exit(1);
+  }
 
-// 3. 解析测试文件
-console.log('3. 解析KML文件');
-const xml2js = require('xml2js');
-const parser = new xml2js.Parser({ explicitArray: false, trim: true });
+  // 3. 解析测试文件
+  console.log('3. 解析KML文件');
+  const xml2js = require('xml2js');
+  const parser = new xml2js.Parser({ explicitArray: false, trim: true });
 
-try {
-  const content = fs.readFileSync(testFile, 'utf-8');
-  const result = await parser.parseStringPromise(content);
-  const doc = result?.kml?.Document || {};
-  const name = doc.name || '未命名路线';
-  
-  console.log(`   ✓ 解析成功`);
-  console.log(`   路线名称: ${name}\n`);
-} catch (err) {
-  console.log(`   ✗ 解析失败: ${err.message}\n`);
-  process.exit(1);
-}
+  try {
+    const content = fs.readFileSync(testFile, 'utf-8');
+    const result = await parser.parseStringPromise(content);
+    const doc = result?.kml?.Document || {};
+    const name = doc.name || '未命名路线';
 
-// 4. 准备测试数据
-console.log('4. 准备测试数据');
+    console.log(`   ✓ 解析成功`);
+    console.log(`   路线名称: ${name}\n`);
+  } catch (err) {
+    console.log(`   ✗ 解析失败: ${err.message}\n`);
+    process.exit(1);
+  }
+
+  // 4. 准备测试数据
+  console.log('4. 准备测试数据');
 const testData = {
   name: '测试路线',
   points: [
@@ -197,16 +198,22 @@ req.on('timeout', () => {
   console.log('   1. 网络连接慢');
   console.log('   2. 云函数处理时间长');
   console.log('   3. 云函数未响应\n');
-  
+
   console.log('建议操作:');
   console.log('   1. 检查网络连接');
   console.log('   2. 增加超时时间');
   console.log('   3. 查看云函数日志\n');
-  
+
+  process.exit(1);
+  });
+
+  req.write(testDataStr);
+  req.end();
+
+  console.log('请求已发送，等待响应...\n');
+}
+
+main().catch(err => {
+  console.log(`\n错误: ${err.message}`);
   process.exit(1);
 });
-
-req.write(testDataStr);
-req.end();
-
-console.log('请求已发送，等待响应...\n');
