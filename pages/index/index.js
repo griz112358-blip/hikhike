@@ -45,9 +45,12 @@ Page({
   },
   
   onRouteTap(e) {
-    const { id } = e.currentTarget.dataset
-    const query = `id=${id}`;
-    wx.navigateTo({ url: `/pages/detail/index?${query}` })
+    const { name } = e.currentTarget.dataset;
+    if (name) {
+      wx.navigateTo({
+        url: `/pages/search_results/index?keyword=${encodeURIComponent(name)}`
+      });
+    }
   },
   
   onCollectionTap(e) {
